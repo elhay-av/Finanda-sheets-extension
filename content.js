@@ -8,7 +8,7 @@ function initBridge() {
   const hostname = window.location.hostname;
   const protocol = window.location.protocol;
 
-  if (!hostname.endsWith('googleusercontent.com') && protocol !== 'file:') {
+  if (!hostname.endsWith('googleusercontent.com') && hostname !== 'budget.l18.me' && protocol !== 'file:') {
     return;
   }
 

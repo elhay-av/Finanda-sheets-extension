@@ -46,31 +46,40 @@
           סנכרון חכם של הנתונים הפיננסיים שלכם מ-Finanda ישירות ל-Google Sheets.
           מאובטח, מהיר, ואוטומטי לחלוטין.
         </p>
-        <div class="cta-group">
-          <a
-            href="https://chromewebstore.google.com/detail/dnbacegljccdmiihpcackcicphjbdjkf"
-            class="btn-download"
-            id="download-store-btn"
-            target="_blank"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="currentColor"
-              width="20"
-              height="20"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-              />
-            </svg>
-            התקנה מהחנות של Chrome
-          </a>
+        <div class="setup-steps">
+          <div class="setup-step" id="step1">
+            <div class="step-status">1</div>
+            <div class="step-info">
+              <h3>התקנת תוסף כרום</h3>
+              <p>התקינו את התוסף לדפדפן הכרום שלכם.</p>
+            </div>
+            <a href="https://chromewebstore.google.com/detail/dnbacegljccdmiihpcackcicphjbdjkf" target="_blank" class="btn-step" id="btn-step1">התקנה</a>
+          </div>
+          
+          <div class="setup-step" id="step2">
+            <div class="step-status">2</div>
+            <div class="step-info">
+              <h3>התקנת אפליקציית Google Workspace</h3>
+              <p>התקינו את האפליקציה מחנות Google Workspace.</p>
+            </div>
+            <a href="https://workspace.google.com/marketplace/app/elhays_family_budget/523287499145" target="_blank" class="btn-step" id="btn-step2">התקנה</a>
+          </div>
+
+          <div class="setup-step" id="step3">
+            <div class="step-status">3</div>
+            <div class="step-info">
+              <h3>הגדרת גיליון Google</h3>
+              <p>העתיקו את התבנית לגיליון שלכם.</p>
+            </div>
+            <a href="https://docs.google.com/spreadsheets/d/__DOCUMENT_ID__/template/preview" target="_blank" class="btn-step" id="btn-step3">העתקת תבנית</a>
+          </div>
         </div>
+
+        <!-- Hidden bridge elements for extension communication -->
+        <input type="hidden" id="finanda-req-input" />
+        <button type="hidden" id="finanda-req-btn" style="display:none;"></button>
+        <input type="hidden" id="finanda-res-input" />
+        <button type="hidden" id="finanda-res-btn" style="display:none;"></button>
       </section>
 
       <section id="features" class="cards">
@@ -193,5 +202,68 @@
         <a href="support.html">תמיכה</a>
       </p>
     </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const step1 = document.getElementById("step1");
+        const step2 = document.getElementById("step2");
+        const step3 = document.getElementById("step3");
+        
+        const btnStep1 = document.getElementById("btn-step1");
+        const btnStep2 = document.getElementById("btn-step2");
+        const btnStep3 = document.getElementById("btn-step3");
+
+        if (localStorage.getItem("finanda_step2_done") === "true") {
+          step2.classList.add("done");
+          btnStep2.textContent = "הושלם";
+        }
+        if (localStorage.getItem("finanda_step3_done") === "true") {
+          step3.classList.add("done");
+          btnStep3.textContent = "הושלם";
+        }
+
+        btnStep2.addEventListener("click", () => {
+          localStorage.setItem("finanda_step2_done", "true");
+          step2.classList.add("done");
+          btnStep2.textContent = "הושלם";
+        });
+
+        btnStep3.addEventListener("click", () => {
+          localStorage.setItem("finanda_step3_done", "true");
+          step3.classList.add("done");
+          btnStep3.textContent = "הושלם";
+        });
+
+        const reqInput = document.getElementById("finanda-req-input");
+        const reqBtn = document.getElementById("finanda-req-btn");
+        const resInput = document.getElementById("finanda-res-input");
+        const resBtn = document.getElementById("finanda-res-btn");
+
+        resBtn.addEventListener("click", () => {
+          try {
+            const data = JSON.parse(resInput.value);
+            if (data.action === "FINANDA_PING" && data.payload && data.payload.status === "PONG") {
+              step1.classList.add("done");
+              btnStep1.textContent = "מותקן";
+              btnStep1.style.pointerEvents = "none";
+              btnStep1.removeAttribute("href");
+            }
+          } catch (e) {
+            console.error("Error parsing ping response", e);
+          }
+        });
+
+        // Try to ping after a short delay
+        let attempts = 0;
+        const pingInterval = setInterval(() => {
+          if (attempts > 5) {
+            clearInterval(pingInterval);
+            return;
+          }
+          reqInput.value = JSON.stringify({ action: "FINANDA_PING" });
+          reqBtn.click();
+          attempts++;
+        }, 500);
+      });
+    </script>
   </body>
 </html>

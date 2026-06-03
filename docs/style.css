@@ -246,6 +246,48 @@ footer {
 footer a { color: var(--text-secondary); text-decoration: none; }
 footer a:hover { color: var(--accent-purple); }
 
+/* ─── Setup Steps ─── */
+.setup-steps {
+  display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 600px; margin: 0 auto;
+}
+.setup-step {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--bg-card); border: 1px solid var(--border-card);
+  border-radius: var(--radius); padding: 16px;
+  transition: all 0.25s; text-align: right;
+}
+.setup-step:hover { background: var(--bg-card-hover); }
+.step-status {
+  flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-secondary); border: 2px solid var(--border-card);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: var(--text-secondary); position: relative;
+}
+.step-info { flex-grow: 1; }
+.step-info h3 { font-size: 1rem; margin-bottom: 4px; }
+.step-info p { font-size: 0.85rem; color: var(--text-secondary); margin: 0; }
+.btn-step {
+  padding: 8px 16px; background: var(--gradient-btn);
+  color: #fff; font-weight: 600; font-size: 0.9rem;
+  border-radius: 8px; text-decoration: none; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s; white-space: nowrap; text-align: center;
+
+  width: 150px;
+}
+.btn-step:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(123,104,238,0.3); }
+
+.setup-step.done { border-color: var(--accent-green); background: var(--accent-green-dim); }
+.setup-step.done .step-status {
+  background: var(--accent-green); border-color: var(--accent-green); color: transparent;
+}
+.setup-step.done .step-status::after {
+  content: "✓"; color: #fff; position: absolute;
+}
+.setup-step.done .btn-step {
+  background: transparent; color: var(--accent-green);
+  box-shadow: none; border: 1px solid var(--accent-green); transform: none;
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 600px) {
   .hero h1 { font-size: 2rem; }

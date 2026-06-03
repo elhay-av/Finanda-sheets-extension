@@ -83,6 +83,11 @@ jobs:
         run: |
           mkdir -p _site
           cp -r docs/* _site/
+          DOC_ID="${{ vars.SPREADSHEET_ID }}"
+          if [ -z "$DOC_ID" ]; then
+            DOC_ID="1Hqno8ZqtX_bk2adS8diVb9K0XJ5dX2umVlibqJNlJqE"
+          fi
+          sed -i "s/__DOCUMENT_ID__/${DOC_ID}/g" _site/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

@@ -88,6 +88,17 @@ nav {
   font-size: 0.9rem; font-weight: 500; transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--accent-purple); }
+#lang-toggle {
+  border: 1px solid var(--border-card);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+#lang-toggle:hover {
+  border-color: var(--accent-purple);
+  background: var(--accent-purple-dim);
+}
 
 /* ─── Hero ─── */
 .hero { text-align: center; padding: 80px 0 50px; }
